@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Ro-sham-bo</title>
+        <meta charset="utf-8" />
+    </head>
+
+    <body>
+
+        <button id="rock">Rock</button>
+        <button id="paper">Paper</button>
+        <button id="scissors">Scissors</button>
+
+        <div id="results">
+            <p>Player | Computer | Result</p>
+        </div>
+
+        <script>
+
+            let playerSelection;
+            let computerSelection;
+
+            let winCount = 0;
+            let loseCount = 0;
+
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach((button) => {
+                button.addEventListener('click', () => {
+                    playerSelection = button.innerText;
+                    playRound(playerSelection, computerPlay());
+                });
+            });
+
+            // determines the computer's move
+            function computerPlay(){
+                let computerChoice = Math.floor(Math.random()*3);
+                
+                switch(computerChoice){
+                    case 0:
+                        return "Rock";
+                        break;
+                    case 1:
+                        return "Paper";
+                        break;
+                    case 2:
+                        return "Scissors";
+                        break;
+                    default:
+                        console.log("Something bad happened.");
+                }
+            }
+
+            function playRound(playerSelection, computerSelection){
+
+                // makes sure player's move is Capitalized
+                let firstLetter = playerSelection.substring(0,1).toUpperCase();
+                let secondLetter = playerSelection.substring(1,playerSelection.length).toLowerCase();
+                playerSelection = firstLetter + secondLetter;
+
+                let winCondition = roundCompare(playerSelection, computerSelection);
+
+                roundResult(winCondition, playerSelection, computerSelection);
+
+            }
+
+            function roundCompare(playerSelection, computerSelection){
+
+                if (playerSelection === 'Rock'){
+                    if (computerSelection === 'Paper'){
+                        winCondition = "You Lose!";
+                    }
+                    else if (computerSelection === 'Rock'){
+                        winCondition = "You Tied!";
+                    }
+                    else {
+                        winCondition = "You Win!";
+                    }
+                }
+                else if (playerSelection === 'Paper'){
+                    if (computerSelection === 'Paper'){
+                        winCondition = "You Tied!";
+                    }
+                    else if (computerSelection === 'Rock'){
+                        winCondition = "You Win!";
+                    }
+                    else {
+                        winCondition = "You Lose!";
+                    }
+                }
+                else {
+                    if (computerSelection === 'Paper'){
+                        winCondition = "You Win!";
+                    }
+                    else if (computerSelection === 'Rock'){
+                        winCondition = "You Lose!";
+                    }
+                    else {
+                        winCondition = "You Tied!";
+                    }
+                }
+
+                return winCondition;
+            }
+
+            function roundResult(winCondition, playerSelection, computerSelection){
+
+                const theDiv = document.querySelector('div');
+                const para = document.createElement('p');
+
+                if (winCondition === "You Win!"){
+                    winCount++;
+                }
+                else if (winCondition === "You Lose!"){
+                    loseCount++;
+                }
+
+                para.textContent += playerSelection + ' | ' + computerSelection + ' | ' + winCondition
+                        + ' | Wins: ' + winCount + ' | Losses: ' + loseCount;
+                        
+                theDiv.appendChild(para);
+
+                if (winCount ===5 || loseCount === 5){
+
+                    const newPara = document.createElement('p');
+
+                    if (winCount === 5){
+                        newPara.textContent = 'You got to 5 points first! You are the champion! The counter will now reset.';
+                    }
+                    else {
+                        newPara.textContent = 'The computer got to 5 points first! The computer is the champion! The counter will now reset.';
+                    }
+
+                    theDiv.appendChild(newPara);
+
+                    winCount = 0;
+                    loseCount = 0;
+                }
+                
+            }
+
+        </script>
+    </body>
+</html>
